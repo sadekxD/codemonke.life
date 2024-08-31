@@ -23,15 +23,29 @@
 				z-index: -1;
 				opacity: 0.1;
 			}
+			body {
+				background-color: #000000;
+				color: #00ff00;
+			}
+			input {
+				caret-color: #00ff00;
+			}
+			a {
+				color: #00ffff;
+				text-decoration: underline;
+			}
+			a:hover {
+				color: #ff00ff;
+			}
 		</style>
 	</head>
 
-	<body class="bg-black bg-opacity-80 text-green-400 font-mono p-4">
+	<body class="font-mono p-4">
 		<canvas id="bg-canvas"></canvas>
 		<div class="max-w-3xl mx-auto relative">
 			<div id="output" class="mb-4"></div>
 			<div class="flex items-center">
-				<span class="mr-2">$</span>
+				<span class="mr-2 text-yellow-400">$</span>
 				<input
 					type="text"
 					id="input"
@@ -59,7 +73,7 @@
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			camera.position.setZ(30);
 
-			const geometry = new THREE.IcosahedronGeometry(10, 0);
+			const geometry = new THREE.IcosahedronGeometry(10, 1);
 			const material = new THREE.MeshBasicMaterial({
 				color: 0x00ff00,
 				wireframe: true,
@@ -69,8 +83,8 @@
 
 			function animate() {
 				requestAnimationFrame(animate);
-				icosahedron.rotation.x += 0.005;
-				icosahedron.rotation.y += 0.005;
+				icosahedron.rotation.x += 0.001;
+				icosahedron.rotation.y += 0.001;
 				renderer.render(scene, camera);
 			}
 			animate();
@@ -85,7 +99,7 @@
 			const output = document.getElementById("output");
 			const input = document.getElementById("input");
 			const commands = {
-				help: "Available commands:\n- summary\n- skills\n- contact\n- clear",
+				help: "Available commands:\n- summary\n- skills\n- projects\n- contact\n- clear",
 				summary:
 					"Performance-driven and motivated Full Stack Web Developer with vast knowledge in many different front-end and back-end languages, responsive frameworks, databases, and best code practices.",
 				skills: [
@@ -108,6 +122,32 @@
 							"Databases & ORM: PostgreSQL, Prisma",
 						],
 					},
+				],
+				projects: [
+					{ 
+						name: "Re-engage",
+						description: "Extra Engagement & Views without The Extra Work. Turn YouTube videos and Documents into High-Quality Twitter and LinkedIn content that consistently goes viral.",
+						link: "reengage.app",
+						tools: "Lanchchain, Fastapi, Next.js, Prisma, PostgreSQL, Stripe, Resend"
+					},
+					{
+						name: "Webship",
+						description: "A simple minimal Next.js SaaS template to launch SaaS as fast as possible. It's mainly focused on reducing the headache of building something from scratch.",
+						link: "webship.ing",
+						tools: "Next.js, Prisma, PostgreSQL, Stripe, Resend, Crisp"
+					},
+					{
+						name: "Job resources",
+						description: "List different job platforms and resources to support individuals in securing their desired roles. Leverage next.js server-side rendering to enhance search engine optimization (SEO).",
+						link: "jobresources.co",
+						tools: "Next.js, Sanity CMS, Groq, Shadcn"
+					},
+					{
+						name: "Detailify",
+						description: "Get Detailing AI to enhance your photos and add stunning details. Thousands of professionals are already transforming their visual content!",
+						link: "detailify.pro",
+						tools: "Next.js, Prisma, PostgreSQL, Stripe, Resend"
+					}
 				],
 				contact: [
 					"Email: your.email@example.com",
@@ -136,6 +176,20 @@
 						li.textContent = item;
 						ul.appendChild(li);
 					});
+				} else if (typeof text === "object" && text.name) {
+					const div = document.createElement("div");
+					div.innerHTML = `<strong>${text.name}</strong>`;
+					output.appendChild(div);
+					const p = document.createElement("p");
+					p.textContent = text.description;
+					div.appendChild(p);
+					const link = document.createElement("p");
+					link.innerHTML = `<strong>Link:</strong> <a href="https://${text.link}" target="_blank">${text.link}</a>`;
+					div.appendChild(link);
+					const tools = document.createElement("p");
+					tools.innerHTML = `<strong>Tools:</strong> ${text.tools}`;
+					div.appendChild(tools);
+					output.appendChild(document.createElement("br"));
 				} else {
 					const p = document.createElement("p");
 					p.textContent = text;
@@ -151,12 +205,14 @@
 				if (e.key === "Enter") {
 					const command = this.value.trim().toLowerCase();
 					addOutput(`$ ${command}`);
-
+					
 					if (command in commands) {
 						if (command === "skills") {
 							commands.skills.forEach((section) => addOutput(section));
 						} else if (command === "contact") {
 							addOutput(commands.contact);
+						} else if (command === "projects") {
+							commands.projects.forEach((project) => addOutput(project));
 						} else {
 							addOutput(commands[command]);
 						}
