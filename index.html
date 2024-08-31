@@ -124,35 +124,41 @@
 					},
 				],
 				projects: [
-					{ 
+					{
 						name: "Re-engage",
-						description: "Extra Engagement & Views without The Extra Work. Turn YouTube videos and Documents into High-Quality Twitter and LinkedIn content that consistently goes viral.",
+						description:
+							"Extra Engagement & Views without The Extra Work. Turn YouTube videos and Documents into High-Quality Twitter and LinkedIn content that consistently goes viral.",
 						link: "reengage.app",
-						tools: "Lanchchain, Fastapi, Next.js, Prisma, PostgreSQL, Stripe, Resend"
+						tools:
+							"Lanchchain, Fastapi, Next.js, Prisma, PostgreSQL, Stripe, Resend",
 					},
 					{
 						name: "Webship",
-						description: "A simple minimal Next.js SaaS template to launch SaaS as fast as possible. It's mainly focused on reducing the headache of building something from scratch.",
+						description:
+							"A simple minimal Next.js SaaS template to launch SaaS as fast as possible. It's mainly focused on reducing the headache of building something from scratch.",
 						link: "webship.ing",
-						tools: "Next.js, Prisma, PostgreSQL, Stripe, Resend, Crisp"
+						tools: "Next.js, Prisma, PostgreSQL, Stripe, Resend, Crisp",
 					},
 					{
 						name: "Job resources",
-						description: "List different job platforms and resources to support individuals in securing their desired roles. Leverage next.js server-side rendering to enhance search engine optimization (SEO).",
+						description:
+							"List different job platforms and resources to support individuals in securing their desired roles. Leverage next.js server-side rendering to enhance search engine optimization (SEO).",
 						link: "jobresources.co",
-						tools: "Next.js, Sanity CMS, Groq, Shadcn"
+						tools: "Next.js, Sanity CMS, Groq, Shadcn",
 					},
 					{
 						name: "Detailify",
-						description: "Get Detailing AI to enhance your photos and add stunning details. Thousands of professionals are already transforming their visual content!",
+						description:
+							"Get Detailing AI to enhance your photos and add stunning details. Thousands of professionals are already transforming their visual content!",
 						link: "detailify.pro",
-						tools: "Next.js, Prisma, PostgreSQL, Stripe, Resend"
-					}
+						tools: "Next.js, Prisma, PostgreSQL, Stripe, Resend",
+					},
 				],
 				contact: [
-					"Email: your.email@example.com",
-					"LinkedIn: linkedin.com/in/yourprofile",
-					"GitHub: github.com/yourusername",
+					"Email: sadekirfan314@gmail.com",
+					"X/Twitter: https://x.com/remote_ninja",
+					"LinkedIn: https://www.linkedin.com/in/irfan-sadek77",
+					"GitHub: https://github.com/sadekxd",
 				],
 			};
 
@@ -205,7 +211,7 @@
 				if (e.key === "Enter") {
 					const command = this.value.trim().toLowerCase();
 					addOutput(`$ ${command}`);
-					
+
 					if (command in commands) {
 						if (command === "skills") {
 							commands.skills.forEach((section) => addOutput(section));
