@@ -1,38 +1,181 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Irfan Sadek</title>
-  </head>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Irfan Sadek - Terminal Portfolio</title>
+		<meta
+			name="description"
+			content="Performance-driven and motivated Full Stack Web Developer with vast knowledge in many different front-end and back-end languages, responsive frameworks, databases, and best code practices."
+		/>
+		<link
+			href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+			rel="stylesheet"
+		/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+		<style>
+			#bg-canvas {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: -1;
+				opacity: 0.1;
+			}
+		</style>
+	</head>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+	<body class="bg-black bg-opacity-80 text-green-400 font-mono p-4">
+		<canvas id="bg-canvas"></canvas>
+		<div class="max-w-3xl mx-auto relative">
+			<div id="output" class="mb-4"></div>
+			<div class="flex items-center">
+				<span class="mr-2">$</span>
+				<input
+					type="text"
+					id="input"
+					class="bg-transparent text-green-400 focus:outline-none flex-grow"
+					autofocus
+				/>
+			</div>
+		</div>
 
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      flex-direction: column;
-      gap: 1rem;
-      font-family: "inter";
-      padding: 1rem;
-      text-align: center;
-    }
-    p {
-      line-height: 2;
-    }
-  </style>
-  <body>
-    <h1>Welcome to Codemonke.life</h1>
-    <p>
-      It's my personal 😀portfolio / 📝blog / ⭐May be something cooler
-    </p>
-    <p><b>- Irfan Sadek :)</b></p>
-  </body>
+		<script>
+			// Three.js setup
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera(
+				75,
+				window.innerWidth / window.innerHeight,
+				0.1,
+				1000
+			);
+			const renderer = new THREE.WebGLRenderer({
+				canvas: document.querySelector("#bg-canvas"),
+				alpha: true,
+			});
+
+			renderer.setPixelRatio(window.devicePixelRatio);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			camera.position.setZ(30);
+
+			const geometry = new THREE.IcosahedronGeometry(10, 0);
+			const material = new THREE.MeshBasicMaterial({
+				color: 0x00ff00,
+				wireframe: true,
+			});
+			const icosahedron = new THREE.Mesh(geometry, material);
+			scene.add(icosahedron);
+
+			function animate() {
+				requestAnimationFrame(animate);
+				icosahedron.rotation.x += 0.005;
+				icosahedron.rotation.y += 0.005;
+				renderer.render(scene, camera);
+			}
+			animate();
+
+			window.addEventListener("resize", () => {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			});
+
+			// Terminal logic
+			const output = document.getElementById("output");
+			const input = document.getElementById("input");
+			const commands = {
+				help: "Available commands:\n- summary\n- skills\n- contact\n- clear",
+				summary:
+					"Performance-driven and motivated Full Stack Web Developer with vast knowledge in many different front-end and back-end languages, responsive frameworks, databases, and best code practices.",
+				skills: [
+					{
+						header: "Proficiency:",
+						items: [
+							"Languages & Frameworks: JavaScript, TypeScript, Node.js, React, Next.js",
+							"Styling: CSS, SASS, Tailwind CSS",
+							"State Management: Redux",
+							"Version Control: Git",
+							"CMS: Sanity",
+						],
+					},
+					{
+						header: "Familiarity:",
+						items: [
+							"Languages & Frameworks: Python, Django, Solidity, Ethers",
+							"Technologies: Web3",
+							"Cloud Services: AWS (Lambda, S3, SQS, EventBridge)",
+							"Databases & ORM: PostgreSQL, Prisma",
+						],
+					},
+				],
+				contact: [
+					"Email: your.email@example.com",
+					"LinkedIn: linkedin.com/in/yourprofile",
+					"GitHub: github.com/yourusername",
+				],
+			};
+
+			function addOutput(text) {
+				if (Array.isArray(text)) {
+					const ul = document.createElement("ul");
+					output.appendChild(ul);
+					text.forEach((item) => {
+						const li = document.createElement("li");
+						li.textContent = item;
+						ul.appendChild(li);
+					});
+				} else if (typeof text === "object" && text.header) {
+					const div = document.createElement("div");
+					div.textContent = text.header;
+					output.appendChild(div);
+					const ul = document.createElement("ul");
+					div.appendChild(ul);
+					text.items.forEach((item) => {
+						const li = document.createElement("li");
+						li.textContent = item;
+						ul.appendChild(li);
+					});
+				} else {
+					const p = document.createElement("p");
+					p.textContent = text;
+					output.appendChild(p);
+				}
+			}
+
+			function clearOutput() {
+				output.innerHTML = "";
+			}
+
+			input.addEventListener("keydown", function (e) {
+				if (e.key === "Enter") {
+					const command = this.value.trim().toLowerCase();
+					addOutput(`$ ${command}`);
+
+					if (command in commands) {
+						if (command === "skills") {
+							commands.skills.forEach((section) => addOutput(section));
+						} else if (command === "contact") {
+							addOutput(commands.contact);
+						} else {
+							addOutput(commands[command]);
+						}
+					} else if (command === "clear") {
+						clearOutput();
+					} else {
+						addOutput('Command not found. Type "help" for available commands.');
+					}
+
+					this.value = "";
+					window.scrollTo(0, document.body.scrollHeight);
+				}
+			});
+
+			document.addEventListener("DOMContentLoaded", function () {
+				addOutput(
+					'Welcome to Irfan Sadek\'s terminal portfolio. Type "help" for available commands.'
+				);
+			});
+		</script>
+	</body>
 </html>
